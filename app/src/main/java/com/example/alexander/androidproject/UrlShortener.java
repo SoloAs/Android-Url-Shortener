@@ -21,8 +21,8 @@ import java.io.UnsupportedEncodingException;
  * Created by Alexander on 24.11.2014.
  */
 public class UrlShortener {
-    static InputStream is = null;
-    static JSONObject jObj = null;
+    static InputStream inputStream = null;
+    static JSONObject jObject = null;
     static String json = "";
     public UrlShortener() {
     }
@@ -36,7 +36,7 @@ public class UrlShortener {
             httpPost.setHeader("Content-Type", "application/json");
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
+            inputStream = httpEntity.getContent();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
@@ -46,13 +46,13 @@ public class UrlShortener {
         }
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "iso-8859-1"), 8);
+                    inputStream, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "n");
+                sb.append(line + "\n");
             }
-            is.close();
+            inputStream.close();
             json = sb.toString();
             Log.e("JSON", json);
         } catch (Exception e) {
@@ -60,11 +60,11 @@ public class UrlShortener {
         }
         // Parse the String to a JSON Object
         try {
-            jObj = new JSONObject(json);
+            jObject = new JSONObject(json);
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
         // Return JSON String
-        return jObj;
+        return jObject;
     }
 }

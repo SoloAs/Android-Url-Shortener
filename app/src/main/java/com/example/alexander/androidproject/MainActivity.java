@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -17,19 +18,22 @@ import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
-    Button Submit;
+    Button submit;
     EditText longUrl;
     TextView shortUrl;
+    ImageView pic;
     static String api_address="https://www.googleapis.com/urlshortener/v1/url";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Submit = (Button)findViewById(R.id.submit);
+        pic = (ImageView)findViewById(R.id.imageView);
+        pic.setImageResource(R.drawable.no_matter);
+        submit = (Button)findViewById(R.id.submit);
         longUrl = (EditText)findViewById(R.id.LongUrl);
         shortUrl = (TextView)findViewById(R.id.ShortUrl);
-        Submit.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new URLShort().execute();
@@ -38,13 +42,13 @@ public class MainActivity extends Activity {
     }
 
     private class URLShort extends AsyncTask<String, String, JSONObject>{
-        private ProgressDialog pDialog;
+        private ProgressDialog pDialog; //вращающийся индикатор загрузки
         String _longUrl;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Contacting Google Servers ...");
+            pDialog.setMessage("Connecting to Google Servers ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             _longUrl = longUrl.getText().toString();
@@ -57,17 +61,17 @@ public class MainActivity extends Activity {
             JSONObject json = jParser.getJSONFromUrl(api_address, _longUrl);
             return json;
         }
-        String ShortUrl;
+        String _shortUrl;
         @Override
         protected void onPostExecute(JSONObject json) {
             pDialog.dismiss();
             try {
                 if (json != null) {
-                    ShortUrl = json.getString("id");
-                    shortUrl.setText(ShortUrl);
+                    _shortUrl = json.getString("id");
+                    shortUrl.setText(_shortUrl);
                     pDialog.dismiss();
                 } else {
-                    shortUrl.setText("Network Error");
+                    shortUrl.setText("Error");
                     pDialog.dismiss();
                 }
             } catch (JSONException e) {
