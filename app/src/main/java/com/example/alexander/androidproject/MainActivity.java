@@ -2,6 +2,10 @@ package com.example.alexander.androidproject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,6 +41,17 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 new URLShort().execute();
+            }
+        });
+        shortUrl.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v){
+                Intent internetIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(shortUrl.toString()));
+                internetIntent.setComponent(new ComponentName("com.android.browser","com.android.browser.BrowserActivity"));
+                internetIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(internetIntent);
             }
         });
     }
