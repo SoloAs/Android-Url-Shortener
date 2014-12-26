@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,32 +16,74 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
 
     Button submit;
+    Button save;
+    Button db;
+    Button clear;
     EditText longUrl;
     TextView shortUrl;
-    ImageView pic;
+    Link newLink;
+
     static String api_address="https://www.googleapis.com/urlshortener/v1/url";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        pic = (ImageView)findViewById(R.id.imageView);
-        pic.setImageResource(R.drawable.no_matter);
+
         submit = (Button)findViewById(R.id.submit);
+        save = (Button)findViewById(R.id.save);
+        clear = (Button)findViewById(R.id.clearDb);
+        db = (Button)findViewById(R.id.db);
         longUrl = (EditText)findViewById(R.id.LongUrl);
         shortUrl = (TextView)findViewById(R.id.ShortUrl);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new URLShort().execute();
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    newLink = new Link(longUrl.getText().toString() + '(' + shortUrl.getText().toString() + ')');
+                    MyDBHelper dbHelper = MyDBHelper.getInstance(MainActivity.this);
+                    dbHelper.getLinkDAO().create(newLink);
+                    //MyDBHelper.getInstance(MainActivity.this).getLinkDAO().clear();
+                    Toast.makeText(MainActivity.this, "Link added to db", Toast.LENGTH_SHORT).show();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    MyDBHelper dbHelper = MyDBHelper.getInstance(MainActivity.this);
+                    dbHelper.deleteDatabase("links.db");
+                    Toast.makeText(MainActivity.this, "db cleared", Toast.LENGTH_SHORT).show();
+            }
+        });
+        db.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, dbActivity.class);
+                    startActivity(intent);
+
             }
         });
         shortUrl.setOnClickListener(new View.OnClickListener()

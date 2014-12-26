@@ -4,5 +4,17 @@
     <string name="app_name">AndroidProject</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="enterLong">Введите длинную ссылку:</string>
+    <string name="result">Короткая ссылка:</string>
+    <string name="getResult">Получить короткую ссылку</string>
+    <string name="title_activity_parameters">ParametersActivity</string>
+    <string name="longLink">Длинная ссылка:</string>
+    <string name="shortURLClicks">Кликов по короткой ссылке:</string>
+    <string name="longURLClicks">Кликов по длинной ссылке:</string>
+    <string name="country">Страна:</string>
+    <string name="browser">Браузер:</string>
+    <string name="platform">Платформа:</string>
+    <string name="addToDB">Добавить в базу данных</string>
+    <string name="title_activity_db">dbActivity</string>
 
 </resources>
